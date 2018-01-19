@@ -5,7 +5,7 @@ import itertools
 from time import sleep
 from Queue import Queue
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 CONST_PASS = "P@55word!"
 
@@ -59,7 +59,6 @@ class Unmask_Meta(object):
         length = len(element.get_attribute('value'))
         if length != 0:
             element.send_keys(length * Keys.BACKSPACE)
-        else:
             return
 
     def start_process(self):
@@ -89,17 +88,18 @@ class Unmask_Meta(object):
 
             while not self.guesses.empty():
                 #Make sure form is clear
-                textarea_len = len(textarea.get_attribute('value'))
-                if textarea_len != 0:
-                    textarea.send_keys(textarea_len * Keys.BACKSPACE)
+                self._clear_field(textarea)
+                self._clear_field(password1)
+                self._clear_field(password2)
+                sleep(0.25)
 
                 textarea.send_keys(' '.join(self.guesses.get()))
                 password1.send_keys(CONST_PASS)
                 password2.send_keys(CONST_PASS)
 
                 ok_button = self.chrome_driver.find_element_by_xpath('//*[@id="app-content"]/div/div[4]/div/div/button[2]')
+                sleep(0.5)
                 ok_button.click()
-
 
                 self.guesses.task_done()
 
@@ -111,7 +111,8 @@ class Unmask_Meta(object):
 if __name__ == "__main__":
 
     filename = "english.txt"
-    known_list = "test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11"
+    known_list =     words = "test, dash, armed, best, egg, milk, kind, luggage, endorse, lamp, nephew"
+
 
     umm = Unmask_Meta(known_list, filename)
     umm.start_process()
