@@ -89,9 +89,7 @@ class METAFORCE(object):
             self.logger.info("Master wordlist completed!")
 
 
-    def start(self, thread_count=None):
-
-        print "Starting Thread %d" % int(thread_count)
+    def start(self):
 
         self._chrome_init()
 
@@ -166,8 +164,4 @@ if __name__ == '__main__':
 
     test_obj = METAFORCE(args.wordlist, args.knownlist)
 
-    for i in range(int(args.threads)):
-        t = Thread(target=test_obj.start, args=(i,))
-        t.start()
-
-
+    test_obj.start()
